@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>玄学分析解析舱</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg-0: oklch(0.1 0.01 250);
+        --bg-1: oklch(0.13 0.014 250);
+        --bg-2: oklch(0.17 0.018 250);
+        --bg-3: oklch(0.22 0.02 250);
+        --panel: rgba(16, 21, 34, 0.94);
+        --panel-soft: rgba(19, 25, 41, 0.9);
+        --panel-strong: rgba(22, 29, 47, 0.98);
+        --line: rgba(152, 173, 221, 0.16);
+        --line-strong: rgba(152, 173, 221, 0.26);
+        --text: rgba(243, 246, 255, 0.96);
+        --text-soft: rgba(181, 190, 221, 0.82);
+        --text-faint: rgba(127, 138, 171, 0.66);
+        --accent: oklch(0.75 0.07 220);
+        --accent-gold: oklch(0.74 0.08 88);
+        --accent-jade: oklch(0.75 0.07 175);
+        --radius-sm: 14px;
+        --radius-md: 20px;
+        --radius-lg: 28px;
+        --radius-shell: 34px;
+        --shadow-0: 0 36px 110px rgba(0, 0, 0, 0.45);
+        --shadow-1: 0 18px 48px rgba(0, 0, 0, 0.28);
+        --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+      }
+
+      body {
+        margin: 0;
+        font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 15% 14%, rgba(91, 134, 255, 0.16), transparent 20%),
+          radial-gradient(circle at 86% 18%, rgba(84, 199, 255, 0.08), transparent 18%),
+          radial-gradient(circle at 50% 110%, rgba(255, 190, 101, 0.08), transparent 28%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 24%),
+          linear-gradient(180deg, var(--bg-1), var(--bg-0));
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.08) 0 1px, transparent 1.4px),
+          radial-gradient(circle at 76% 26%, rgba(255, 255, 255, 0.07) 0 1px, transparent 1.4px),
+          radial-gradient(circle at 64% 74%, rgba(255, 255, 255, 0.04) 0 1px, transparent 1.4px),
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        background-size: 220px 220px, 280px 280px, 320px 320px, 128px 128px, 128px 128px;
+        mask-image: radial-gradient(circle at center, black, transparent 84%);
+        opacity: 0.32;
+      }
+
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        border: 0;
+        background: none;
+        color: inherit;
+      }
+
+      .analysis-shell {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        gap: 18px;
+        min-height: 100vh;
+        padding: 18px;
+      }
+
+      .rail,
+      .viewport {
+        position: relative;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-shell);
+        background: linear-gradient(180deg, rgba(17, 22, 36, 0.96), rgba(12, 16, 27, 0.98));
+        box-shadow: var(--shadow-0);
+        overflow: hidden;
+      }
+
+      .rail {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        gap: 18px;
+      }
+
+      .viewport {
+        display: grid;
+        grid-template-rows: auto auto minmax(0, 1fr);
+        padding: 18px;
+        gap: 18px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .brand-mark {
+        width: 44px;
+        height: 44px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        font-family: "Baskerville", "Times New Roman", "Songti SC", "Source Han Serif SC", serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: rgba(247, 250, 255, 0.96);
+        background:
+          radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.24), transparent 36%),
+          linear-gradient(145deg, rgba(82, 124, 232, 0.98), rgba(34, 71, 162, 0.98));
+        box-shadow: 0 16px 34px rgba(23, 53, 131, 0.34);
+      }
+
+      .brand-copy strong,
+      .head-copy h1,
+      .section-title,
+      .matrix-title,
+      .tab-card h3,
+      .summary-card h3,
+      .drawer-head h2 {
+        font-family: "Baskerville", "Times New Roman", "Songti SC", "Source Han Serif SC", serif;
+        letter-spacing: -0.02em;
+      }
+
+      .brand-copy strong {
+        display: block;
+        font-size: 15px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .brand-copy span,
+      .source-copy,
+      .head-copy p,
+      .metric span,
+      .summary-card p,
+      .issue-desc,
+      .trace-item span,
+      .report-list li,
+      .field-note,
+      .status-line {
+        color: var(--text-soft);
+      }
+
+      .pill-btn,
+      .case-btn,
+      .tab-btn,
+      .drawer-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 42px;
+        padding: 0 15px;
+        border-radius: 16px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        touch-action: manipulation;
+        transition:
+          transform 150ms var(--ease),
+          border-color 160ms var(--ease),
+          background-color 160ms var(--ease),
+          color 160ms var(--ease),
+          box-shadow 160ms var(--ease);
+      }
+
+      .pill-btn,
+      .case-btn,
+      .tab-btn,
+      .drawer-close {
+        background: rgba(21, 28, 44, 0.82);
+        border-color: var(--line);
+      }
+
+      .pill-btn.primary,
+      .case-btn.is-active,
+      .tab-btn.is-active {
+        color: rgba(245, 248, 255, 0.98);
+        background:
+          radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.18), transparent 40%),
+          linear-gradient(145deg, rgba(77, 118, 232, 0.98), rgba(36, 76, 179, 0.98));
+        border-color: rgba(139, 173, 255, 0.22);
+        box-shadow: 0 18px 34px rgba(28, 58, 141, 0.28);
+      }
+
+      .pill-btn:active,
+      .case-btn:active,
+      .tab-btn:active,
+      .drawer-close:active {
+        transform: scale(0.96);
+      }
+
+      .pill-btn:focus-visible,
+      .case-btn:focus-visible,
+      .tab-btn:focus-visible,
+      .drawer-close:focus-visible,
+      .drawer textarea:focus-visible {
+        outline: 2px solid rgba(124, 167, 255, 0.78);
+        outline-offset: 2px;
+      }
+
+      .source-card,
+      .rail-section,
+      .head-card,
+      .stage-card,
+      .summary-card,
+      .tab-card,
+      .drawer {
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: rgba(18, 24, 39, 0.78);
+        box-shadow: var(--shadow-1);
+      }
+
+      .source-card,
+      .rail-section {
+        padding: 16px;
+      }
+
+      .source-card {
+        display: grid;
+        gap: 10px;
+      }
+
+      .source-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 32px;
+        width: fit-content;
+        padding: 0 12px;
+        border-radius: var(--radius-pill);
+        background: rgba(96, 139, 255, 0.12);
+        color: rgba(207, 220, 255, 0.96);
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .rail-section {
+        display: grid;
+        gap: 12px;
+      }
+
+      .section-title {
+        margin: 0;
+        font-size: 22px;
+        line-height: 1.1;
+      }
+
+      .case-list,
+      .tab-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .case-btn,
+      .tab-btn {
+        justify-content: space-between;
+        width: 100%;
+        color: var(--text-soft);
+      }
+
+      .case-btn small,
+      .tab-btn small {
+        color: var(--text-faint);
+      }
+
+      .rail-footer {
+        margin-top: auto;
+        display: grid;
+        gap: 10px;
+      }
+
+      .head-card {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) 320px;
+        gap: 18px;
+        padding: 20px;
+      }
+
+      .head-copy h1 {
+        margin: 0;
+        font-size: clamp(34px, 4vw, 60px);
+        line-height: 1.02;
+        text-wrap: balance;
+      }
+
+      .head-copy p {
+        max-width: 42rem;
+        margin: 14px 0 0;
+        font-size: 15px;
+        line-height: 1.8;
+        text-wrap: pretty;
+      }
+
+      .status-strip {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 18px;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 36px;
+        padding: 0 12px;
+        border-radius: var(--radius-pill);
+        border: 1px solid var(--line);
+        background: rgba(21, 28, 44, 0.82);
+        color: var(--text-soft);
+        font-size: 13px;
+      }
+
+      .chip-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--chip-color, var(--accent));
+        box-shadow: 0 0 0 6px color-mix(in srgb, var(--chip-color, var(--accent)) 18%, transparent);
+      }
+
+      .metrics {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .metric {
+        padding: 16px;
+        border-radius: 20px;
+        border: 1px solid var(--line);
+        background: rgba(22, 29, 47, 0.9);
+      }
+
+      .metric span {
+        display: block;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .metric strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 28px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(360px, 1.05fr) minmax(320px, 0.95fr);
+        gap: 18px;
+        min-height: 0;
+      }
+
+      .stage-card,
+      .summary-stack,
+      .tab-card {
+        min-height: 0;
+      }
+
+      .stage-card {
+        padding: 20px;
+      }
+
+      .stage-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .matrix-title {
+        margin: 0;
+        font-size: 28px;
+      }
+
+      .matrix-copy {
+        margin: 8px 0 0;
+        color: var(--text-faint);
+        line-height: 1.7;
+      }
+
+      .matrix-frame {
+        position: relative;
+        min-height: 420px;
+        border-radius: 28px;
+        border: 1px solid var(--line);
+        background:
+          radial-gradient(circle at center, rgba(89, 132, 255, 0.18), transparent 22%),
+          radial-gradient(circle at center, rgba(67, 89, 149, 0.22), transparent 52%),
+          linear-gradient(180deg, rgba(15, 20, 33, 0.94), rgba(11, 15, 24, 0.98));
+        overflow: hidden;
+      }
+
+      .matrix-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+        background-size: 92px 92px;
+        opacity: 0.32;
+        mask-image: radial-gradient(circle at center, black, transparent 78%);
+      }
+
+      .orbit,
+      .orbit::before,
+      .orbit::after {
+        position: absolute;
+        inset: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        border: 1px solid rgba(145, 173, 255, 0.14);
+        content: "";
+      }
+
+      .orbit {
+        width: 388px;
+        height: 388px;
+      }
+
+      .orbit::before {
+        width: 274px;
+        height: 274px;
+      }
+
+      .orbit::after {
+        width: 514px;
+        height: 514px;
+        opacity: 0.5;
+      }
+
+      .matrix-center,
+      .matrix-node {
+        position: absolute;
+        width: 176px;
+        padding: 18px;
+        border-radius: 24px;
+        border: 1px solid var(--line);
+        background: rgba(20, 27, 43, 0.94);
+        box-shadow: var(--shadow-1);
+      }
+
+      .matrix-center {
+        top: 50%;
+        left: 50%;
+        width: 210px;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+
+      .matrix-center span,
+      .matrix-node span {
+        display: block;
+        color: var(--text-faint);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .matrix-center strong,
+      .matrix-node strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      .matrix-node[data-slot="career"] {
+        top: 44px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .matrix-node[data-slot="relationship"] {
+        top: 50%;
+        right: 44px;
+        transform: translateY(-50%);
+      }
+
+      .matrix-node[data-slot="personality"] {
+        bottom: 44px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .matrix-node[data-slot="risk"] {
+        top: 50%;
+        left: 44px;
+        transform: translateY(-50%);
+      }
+
+      .summary-stack {
+        display: grid;
+        gap: 18px;
+        grid-template-rows: repeat(3, minmax(0, 1fr));
+      }
+
+      .summary-card {
+        padding: 18px;
+      }
+
+      .summary-card h3 {
+        margin: 0;
+        font-size: 22px;
+      }
+
+      .summary-card p {
+        margin: 10px 0 0;
+        line-height: 1.75;
+        text-wrap: pretty;
+      }
+
+      .summary-card strong {
+        color: var(--text);
+      }
+
+      .tabbar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .tab-card {
+        padding: 20px;
+        overflow: hidden;
+      }
+
+      .tab-panel {
+        display: none;
+        height: 100%;
+      }
+
+      .tab-panel.is-active {
+        display: block;
+      }
+
+      .tab-panel-scroll {
+        height: 100%;
+        overflow: auto;
+        padding-right: 4px;
+      }
+
+      .tab-panel-scroll::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .tab-panel-scroll::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+      }
+
+      .overview-grid,
+      .report-grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .panel-block {
+        padding: 18px;
+        border-radius: 22px;
+        border: 1px solid var(--line);
+        background: rgba(22, 29, 47, 0.82);
+      }
+
+      .panel-block h3 {
+        margin: 0;
+        font-size: 20px;
+      }
+
+      .panel-block p {
+        margin: 10px 0 0;
+        color: var(--text-soft);
+        line-height: 1.75;
+      }
+
+      .report-list,
+      .issue-list,
+      .trace-list {
+        display: grid;
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .report-list li,
+      .issue-item,
+      .trace-item {
+        padding: 16px;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        background: rgba(22, 29, 47, 0.82);
+        line-height: 1.75;
+      }
+
+      .issue-item {
+        display: grid;
+        grid-template-columns: 72px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .issue-rank {
+        width: 56px;
+        height: 56px;
+        display: grid;
+        place-items: center;
+        border-radius: 18px;
+        background: rgba(96, 139, 255, 0.12);
+        color: rgba(207, 220, 255, 0.96);
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.08em;
+      }
+
+      .issue-meta strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 18px;
+      }
+
+      .issue-state {
+        display: inline-flex;
+        align-items: center;
+        min-height: 34px;
+        padding: 0 12px;
+        border-radius: var(--radius-pill);
+        background: rgba(40, 49, 72, 0.9);
+        color: var(--text-soft);
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      .issue-state[data-state="tension"] {
+        background: rgba(90, 125, 218, 0.22);
+        color: rgba(221, 230, 255, 0.98);
+      }
+
+      .trace-item strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 17px;
+      }
+
+      .drawer-backdrop {
+        position: fixed;
+        inset: 0;
+        display: none;
+        place-items: center;
+        padding: 20px;
+        background: rgba(5, 8, 14, 0.68);
+        backdrop-filter: blur(10px);
+        z-index: 20;
+      }
+
+      .drawer-backdrop.is-open {
+        display: grid;
+      }
+
+      .drawer {
+        width: min(760px, 100%);
+        padding: 20px;
+      }
+
+      .drawer-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .drawer-head h2 {
+        margin: 0;
+        font-size: 28px;
+      }
+
+      .drawer-head p {
+        margin: 8px 0 0;
+        color: var(--text-faint);
+        line-height: 1.7;
+      }
+
+      .drawer textarea {
+        width: 100%;
+        min-height: 260px;
+        padding: 16px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--line);
+        background: rgba(13, 17, 28, 0.94);
+        color: var(--text);
+        resize: vertical;
+      }
+
+      .drawer-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+
+      @media (max-width: 1180px) {
+        .analysis-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .workspace,
+        .head-card {
+          grid-template-columns: 1fr;
+        }
+
+        .summary-stack {
+          grid-template-rows: none;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 860px) {
+        .summary-stack,
+        .overview-grid,
+        .report-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .matrix-frame {
+          min-height: 620px;
+        }
+
+        .matrix-node[data-slot="career"] {
+          top: 28px;
+        }
+
+        .matrix-node[data-slot="relationship"] {
+          top: 156px;
+          right: 20px;
+          transform: none;
+        }
+
+        .matrix-node[data-slot="risk"] {
+          top: 156px;
+          left: 20px;
+          transform: none;
+        }
+
+        .matrix-node[data-slot="personality"] {
+          bottom: 28px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .analysis-shell,
+        .viewport,
+        .rail {
+          padding: 14px;
+        }
+
+        .issue-item {
+          grid-template-columns: 1fr;
+          align-items: start;
+        }
+
+        .matrix-center,
+        .matrix-node {
+          position: relative;
+          top: auto !important;
+          left: auto !important;
+          right: auto !important;
+          bottom: auto !important;
+          transform: none !important;
+          width: 100%;
+        }
+
+        .matrix-frame {
+          display: grid;
+          gap: 12px;
+          min-height: auto;
+          padding: 18px;
+        }
+
+        .orbit,
+        .matrix-grid {
+          display: none;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body data-page="analysis">
+    <main class="analysis-shell">
+      <aside class="rail">
+        <div class="brand">
+          <div class="brand-mark">玄</div>
+          <div class="brand-copy">
+            <strong>Analysis Chamber</strong>
+            <span>双页</span>
+          </div>
+        </div>
+
+        <section class="source-card">
+          <div class="source-label" id="source-label">Live Intake</div>
+          <div class="source-copy" id="source-copy">待载入</div>
+        </section>
+
+        <section class="rail-section">
+          <h2 class="section-title">视图来源</h2>
+          <div class="case-list">
+            <button class="case-btn" data-case="custom" hidden>
+              <span>我的输入</span>
+              <small>录入</small>
+            </button>
+            <button class="case-btn" data-case="full">
+              <span>完整</span>
+              <small>样例</small>
+            </button>
+            <button class="case-btn" data-case="date-only">
+              <span>缺时辰</span>
+              <small>保守</small>
+            </button>
+            <button class="case-btn" data-case="career">
+              <span>事业</span>
+              <small>单轴</small>
+            </button>
+          </div>
+        </section>
+
+        <section class="rail-section">
+          <h2 class="section-title">舱内面板</h2>
+          <div class="tab-list">
+            <button class="tab-btn is-active" data-tab="overview">
+              <span>总览</span>
+              <small>四维盘面</small>
+            </button>
+            <button class="tab-btn" data-tab="debate">
+              <span>冲突</span>
+              <small>issue 清单</small>
+            </button>
+            <button class="tab-btn" data-tab="report">
+              <span>报告</span>
+              <small>共识与保留</small>
+            </button>
+            <button class="tab-btn" data-tab="trace">
+              <span>轨迹</span>
+              <small>流程节点</small>
+            </button>
+          </div>
+        </section>
+
+        <div class="rail-footer">
+          <button class="pill-btn primary" type="button" id="back-to-intake">重录</button>
+          <button class="pill-btn" type="button" id="open-import">导入 JSON</button>
+        </div>
+      </aside>
+
+      <section class="viewport">
+        <header class="head-card">
+          <div class="head-copy">
+            <h1 id="case-title">待机</h1>
+            <p id="case-summary">待载入</p>
+            <div class="status-strip" id="status-strip"></div>
+          </div>
+
+          <div class="metrics">
+            <div class="metric">
+              <span>Claims</span>
+              <strong id="metric-claims">0</strong>
+            </div>
+            <div class="metric">
+              <span>Open Issues</span>
+              <strong id="metric-open">0</strong>
+            </div>
+            <div class="metric">
+              <span>Tension</span>
+              <strong id="metric-tension">0</strong>
+            </div>
+            <div class="metric">
+              <span>Trace Steps</span>
+              <strong id="metric-trace">0</strong>
+            </div>
+          </div>
+        </header>
+
+        <section class="workspace">
+          <article class="stage-card">
+            <div class="stage-head">
+              <div>
+                <h2 class="matrix-title">四维矩阵</h2>
+                <p class="matrix-copy" id="delivery-readout">待载入</p>
+              </div>
+            </div>
+
+            <div class="matrix-frame">
+              <div class="matrix-grid" aria-hidden="true"></div>
+              <div class="orbit" aria-hidden="true"></div>
+
+              <div class="matrix-center">
+                <span id="completeness-label">完整度</span>
+                <strong id="completeness-text">UNKNOWN</strong>
+              </div>
+
+              <div class="matrix-node" data-slot="career">
+                <span>事业</span>
+                <strong id="node-career">-</strong>
+              </div>
+              <div class="matrix-node" data-slot="relationship">
+                <span>感情</span>
+                <strong id="node-relationship">-</strong>
+              </div>
+              <div class="matrix-node" data-slot="personality">
+                <span>性格</span>
+                <strong id="node-personality">-</strong>
+              </div>
+              <div class="matrix-node" data-slot="risk">
+                <span>风险</span>
+                <strong id="node-risk">-</strong>
+              </div>
+            </div>
+          </article>
+
+          <div class="summary-stack">
+            <article class="summary-card">
+              <h3>缺口</h3>
+              <p id="missing-text">-</p>
+            </article>
+            <article class="summary-card">
+              <h3>焦点</h3>
+              <p id="focus-text">-</p>
+            </article>
+            <article class="summary-card">
+              <h3>裁决</h3>
+              <p id="relation-text">-</p>
+            </article>
+          </div>
+        </section>
+
+        <nav class="tabbar">
+          <button class="tab-btn is-active" data-tab="overview">总览</button>
+          <button class="tab-btn" data-tab="debate">冲突</button>
+          <button class="tab-btn" data-tab="report">报告</button>
+          <button class="tab-btn" data-tab="trace">轨迹</button>
+        </nav>
+
+        <section class="tab-card">
+          <article class="tab-panel is-active" data-panel="overview">
+            <div class="tab-panel-scroll">
+              <div class="overview-grid">
+                <section class="panel-block">
+                  <h3>摘要</h3>
+                  <p id="panel-summary"></p>
+                </section>
+                <section class="panel-block">
+                  <h3>备注</h3>
+                  <p id="panel-note"></p>
+                </section>
+                <section class="panel-block">
+                  <h3>读法</h3>
+                  <p id="panel-readout"></p>
+                </section>
+                <section class="panel-block">
+                  <h3>状态</h3>
+                  <p id="panel-state"></p>
+                </section>
+              </div>
+            </div>
+          </article>
+
+          <article class="tab-panel" data-panel="debate">
+            <div class="tab-panel-scroll">
+              <div class="issue-list" id="issue-list"></div>
+            </div>
+          </article>
+
+          <article class="tab-panel" data-panel="report">
+            <div class="tab-panel-scroll">
+              <div class="report-grid">
+                <section class="panel-block">
+                  <h3>共识</h3>
+                  <ul class="report-list" id="list-consensus"></ul>
+                </section>
+                <section class="panel-block">
+                  <h3>分歧</h3>
+                  <ul class="report-list" id="list-disagreement"></ul>
+                </section>
+                <section class="panel-block">
+                  <h3>保留意见</h3>
+                  <ul class="report-list" id="list-reservations"></ul>
+                </section>
+                <section class="panel-block">
+                  <h3>追问</h3>
+                  <ul class="report-list" id="list-followups"></ul>
+                </section>
+              </div>
+            </div>
+          </article>
+
+          <article class="tab-panel" data-panel="trace">
+            <div class="tab-panel-scroll">
+              <div class="trace-list" id="trace-list"></div>
+            </div>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <div class="drawer-backdrop" id="import-drawer" aria-hidden="true">
+      <section class="drawer">
+        <div class="drawer-head">
+          <div>
+            <h2>导入 JSON</h2>
+            <p>直接重绘。</p>
+          </div>
+          <button class="drawer-close" type="button" id="close-import">关闭</button>
+        </div>
+
+        <textarea id="import-json" placeholder='粘贴完整 JSON，例如 {"request": ..., "fusion_report": ...}'></textarea>
+        <p class="field-note">贴完整 JSON。</p>
+
+        <div class="drawer-actions">
+          <div class="status-line" id="drawer-status"></div>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button class="pill-btn" type="button" id="load-demo-json">样例 JSON</button>
+            <button class="pill-btn primary" type="button" id="import-submit">导入</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

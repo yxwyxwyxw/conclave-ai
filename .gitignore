@@ -1,0 +1,22 @@
+.venv/
+.env
+.env.*
+.pytest_cache/
+__pycache__/
+*.pyc
+
+runs/
+runs_check/
+runs_check2/
+runs_eval/
+runs_eval2/
+
+dist/
+build/
+*.egg-info/
+
+# Private project assets
+AGENTS.md
+.claude/
+docs/multi-agent-debate-roadmap.md
+deliver/DESIGN.md
