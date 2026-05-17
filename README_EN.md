@@ -71,12 +71,52 @@ The web dashboard uses SSE to push progress in real-time — analysis completion
 
 ---
 
+## Features
+
+### Analysis Engine
+
+| Feature | Description |
+|---------|-------------|
+| BaZi Analysis | Day master strength, Ten Gods pattern, Great Luck cycles, Five Elements interaction |
+| Zi Wei Dou Shu Analysis | 12 palaces, Four Transformations, star configurations |
+| Extensible | Architecture supports plugging in new divination systems |
+
+### Debate & Judgment
+
+| Feature | Description |
+|---------|-------------|
+| Auto issue detection | Judge extracts conflicts from analysis texts |
+| Controlled debate | Each school responds only to judge-named issues |
+| Per-round judgment | Checks response quality each round, decides whether to continue |
+| Final ruling | Independent judgment based on full debate transcript |
+
+### Interfaces
+
+| Feature | Description |
+|---------|-------------|
+| CLI | `--demo` / `--query` / `--replay-trace` support |
+| Web dashboard | Chinese-style SPA, Bagua circle login, real-time event stream |
+| SSE push | Progress delivered as events in real-time |
+
+### Engineering
+
+| Feature | Description |
+|---------|-------------|
+| Multi-model | OpenAI / Anthropic / OpenRouter / DeepSeek |
+| Replayable tracing | Auto-saved traces for post-hoc review |
+| Text safety | Built-in safety policy layer |
+| Test coverage | pytest suite covering core pipeline |
+
+---
+
 ## Quick Start
 
 ### Prerequisites
 
 - Python 3.9+
 - At least one LLM API key (OpenAI, Anthropic, OpenRouter, or DeepSeek)
+
+### macOS / Linux
 
 ```bash
 git clone https://github.com/yxwyxwyxw/conclave-ai.git
@@ -86,6 +126,80 @@ source .venv/bin/activate
 pip install -e '.[dev]'
 export OPENAI_API_KEY="sk-..."
 .venv/bin/divination-fusion --demo
+```
+
+### Windows (PowerShell)
+
+```powershell
+git clone https://github.com/yxwyxwyxw/conclave-ai.git
+cd conclave-ai
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -e ".[dev]"
+.venv\Scripts\divination-fusion.exe --demo
+```
+
+---
+
+## Usage Guide
+
+### CLI Commands
+
+```bash
+.venv/bin/divination-fusion --demo
+.venv/bin/divination-fusion --query "Analyze my career prospects for the next three years"
+.venv/bin/divination-fusion --query "How is my wealth luck" --birth-date "1990-06-12" --birth-time "07:45"
+.venv/bin/divination-fusion --replay-trace runs/<run_id>
+.venv/bin/divination-fusion --help
+```
+
+### Web Dashboard
+
+```bash
+export DIVINATION_ADMIN_PASSWORD='your password'
+.venv/bin/divination-fusion-web
+```
+
+Open http://127.0.0.1:8000/ , click the central Bagua circle, enter the password to log in.
+
+### Running Tests
+
+```bash
+.venv/bin/pytest
+```
+
+---
+
+## Project Structure
+
+```
+src/divination_fusion/
+├── agents/           # Input parsing & request construction
+├── battle/           # Debate engine
+├── judge/            # Judgment & rulings
+├── report/           # Report synthesis
+├── safety/           # Safety policy layer
+├── services/         # Field normalization
+├── systems/          # Divination system analyzers
+│   ├── bazi/         #   BaZi (Four Pillars)
+│   └── astrology/    #   Zi Wei Dou Shu
+├── evals/            # Evaluation benchmarks
+├── adapters.py       # Multi-model adapter layer
+├── auth.py           # Web authentication
+├── chart_engine.py   # Chart calculation
+├── cli.py            # Command-line entry
+├── models.py         # Data models
+├── orchestrator.py   # Run orchestration
+├── prompts.py        # Prompt management
+├── session_store.py  # Session persistence
+├── text_debate.py    # Debate protocol
+├── trace.py          # Run tracing
+├── web_ui.py         # Web interface
+├── webapp.py         # FastAPI application
+└── workflow.py       # Workflow definition
+
+prompts/              # System prompts
+tests/                # Test suite
 ```
 
 ---
