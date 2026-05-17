@@ -216,6 +216,8 @@ tests/                # 测试套件
 
 ## 参考文献
 
+### 多 Agent 辩论与裁决框架
+
 | 来源 | 类型 | 参考点 |
 |------|------|--------|
 | [Deb8flow](https://github.com/iason-solomos/Deb8flow) | GitHub | 分阶段编排、回合边界 |
@@ -223,6 +225,19 @@ tests/                # 测试套件
 | [Agent-as-a-Judge](https://github.com/metauto-ai/agent-as-a-judge) | GitHub | 裁判作为独立能力层 |
 | [Multi_Agent_Judge_Bias](https://github.com/Henrymachiyu/Multi_Agent_Judge_Bias) | GitHub | 裁判偏差审视 |
 | [M-MAD](https://aclanthology.org/2025.acl-long.351/) | ACL 2025 | 先拆维度再综合判断 |
+| [Chain-of-Thought Prompting](https://arxiv.org/abs/2201.11903) | NeurIPS 2022 | 思维链推理 |
+| [Constitutional AI](https://arxiv.org/abs/2212.08073) | arXiv | AI 反馈无害化训练 |
+
+### 玄学与命理系统
+
+| 来源 | 类型 | 参考点 |
+|------|------|--------|
+| [Yuan（元）](https://github.com/LZRight123/yuan) | GitHub | 综合命理 Agent，prompts layering 架构 |
+| [esotericAI](https://openhunts.com/winners?date=2026-03-26) | SaaS | AI 塔罗 + 占星，动态解读生成 |
+| [Kerykeion](https://github.com/gcali/kerykeion) | GitHub | Python 占星计算，SVG 星盘 |
+| [OpAstro](https://dev.to/dakidarts/opastro-building-an-open-core-astrology-engine-developers-can-actually-use-ljf) | GitHub | 开源占星引擎 |
+| [太乙神数 (Taiyi)](https://github.com/topics/taiyi?l=python) | GitHub | 太乙神数 Python 实现 |
+| [缘份居 Astrology Toolkit](https://www.cnblogs.com/yuanfenju/p/19985408) | WordPress | 八字/紫微/奇门/六爻 API 封装 |
 
 ---
 

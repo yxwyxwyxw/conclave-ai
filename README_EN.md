@@ -103,6 +103,8 @@ export OPENAI_API_KEY="sk-..."
 
 ## References
 
+### Multi-Agent Debate & Judgment
+
 | Source | Type | Reference |
 |--------|------|-----------|
 | [Deb8flow](https://github.com/iason-solomos/Deb8flow) | GitHub | Staged pipeline, round boundaries |
@@ -110,6 +112,19 @@ export OPENAI_API_KEY="sk-..."
 | [Agent-as-a-Judge](https://github.com/metauto-ai/agent-as-a-judge) | GitHub | Judge as independent capability layer |
 | [Multi_Agent_Judge_Bias](https://github.com/Henrymachiyu/Multi_Agent_Judge_Bias) | GitHub | Judge bias awareness |
 | [M-MAD](https://aclanthology.org/2025.acl-long.351/) | ACL 2025 | Dimension-first then comprehensive judgment |
+| [Chain-of-Thought Prompting](https://arxiv.org/abs/2201.11903) | NeurIPS 2022 | Chain-of-thought reasoning |
+| [Constitutional AI](https://arxiv.org/abs/2212.08073) | arXiv | Harmlessness via AI feedback |
+
+### Divination & Astrology Systems
+
+| Source | Type | Reference |
+|--------|------|-----------|
+| [Yuan](https://github.com/LZRight123/yuan) | GitHub | Comprehensive divination Agent |
+| [esotericAI](https://openhunts.com/winners?date=2026-03-26) | SaaS | AI tarot + astrology |
+| [Kerykeion](https://github.com/gcali/kerykeion) | GitHub | Python astrology library, SVG charts |
+| [OpAstro](https://dev.to/dakidarts/opastro-building-an-open-core-astrology-engine-developers-can-actually-use-ljf) | GitHub | Open-source astrology engine |
+| [Taiyi](https://github.com/topics/taiyi?l=python) | GitHub | Taiyi divination in Python |
+| [Yuanfenju Astrology Toolkit](https://www.cnblogs.com/yuanfenju/p/19985408) | WordPress | BaZi/ZiWei/QiMen API |
 
 ---
 
