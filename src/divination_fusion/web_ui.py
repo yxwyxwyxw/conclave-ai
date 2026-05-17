@@ -1,4 +1,4 @@
-APP_HTML = r"""<!DOCTYPE html>
+APP_HTML =r"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />

@@ -1,10 +1,8 @@
 """Evidence-driven multi-agent divination harness."""
 
+def run_analysis (*args ,**kwargs ):
+    from .workflow import run_analysis as _run_analysis 
 
-def run_analysis(*args, **kwargs):
-    from .workflow import run_analysis as _run_analysis
+    return _run_analysis (*args ,**kwargs )
 
-    return _run_analysis(*args, **kwargs)
-
-
-__all__ = ["run_analysis"]
+__all__ =["run_analysis"]
